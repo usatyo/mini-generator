@@ -24,7 +24,7 @@
 						'text-valign': 'center',
 						'text-halign': 'center',
 						'background-color': '#F7BD5B',
-						"font-size": "10px"
+						'font-size': '10px'
 					}
 				},
 				{
@@ -34,7 +34,7 @@
 						'text-halign': 'center',
 						'line-color': '#ddd',
 						width: 2,
-						"font-size": "7px"
+						'font-size': '7px'
 					}
 				}
 			],
@@ -49,11 +49,11 @@
 	});
 </script>
 
-<div class="h-full flex justify-evenly py-[10vh]">
+<div class="h-full justify-evenly py-[10vh] md:flex md:flex-row">
 	<Card.Root>
-		<div id="cy" class="h-full w-[50vw]" />
+		<div id="cy" class="h-[40vh] md:h-full md:w-[50vw]" />
 	</Card.Root>
-	<div class="w-[30vw] flex flex-col max-h-full overflow-y-scroll">
+	<div class="md:w-[30vw] flex flex-col md:max-h-full overflow-y-scroll py-3 md:py-0">
 		<Tabs.Root value="generate">
 			<Tabs.List class="w-full flex">
 				<Tabs.Trigger value="generate" class="grow">Generate</Tabs.Trigger>
