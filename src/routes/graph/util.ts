@@ -245,7 +245,7 @@ export const formatEdge = (
 		const u = edgeData.map((e) => e[0]).join(' ');
 		const v = edgeData.map((e) => e[1]).join(' ');
 		const w = edgeData.map((e) => e[2]).join(' ');
-		return `${nm.join(' ')}\n${u}\n${v}\n${w}`;
+		return `${nm.join(' ')}\n${w}\n${u}\n${v}`;
 	} else if ((formatMode === 'row' && !weighted) || (formatMode === 'weight-row' && !weighted)) {
 		const u = edgeData.map((e) => e[0]).join(' ');
 		const v = edgeData.map((e) => e[1]).join(' ');
