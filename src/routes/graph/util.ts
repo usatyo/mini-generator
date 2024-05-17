@@ -90,8 +90,6 @@ export const generate = (
 		cy.layout({ name: 'cose', animate: false }).run();
 	} else if (mode === 'complete') {
 		cy.layout({ name: 'circle', animate: false }).run();
-		cy.$('node').style('width', '100px');
-		cy.$('node').style('height', '100px');
 	} else {
 		cy.layout({ name: 'cose', animate: false }).run();
 	}
