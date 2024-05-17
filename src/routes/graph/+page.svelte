@@ -49,11 +49,11 @@
 	});
 </script>
 
-<div class="h-full justify-evenly py-[10vh] md:flex md:flex-row">
+<div class="h-full justify-evenly py-[10vh] lg:flex lg:flex-row">
 	<Card.Root>
-		<div id="cy" class="h-[40vh] md:h-full md:w-[50vw]" />
+		<div id="cy" class="h-[40vh] lg:h-full lg:w-[50vw]" />
 	</Card.Root>
-	<div class="md:w-[30vw] flex flex-col md:max-h-full overflow-y-scroll py-3 md:py-0">
+	<div class="lg:w-[30vw] flex flex-col lg:max-h-full overflow-y-scroll py-3 lg:py-0">
 		<Tabs.Root value="generate">
 			<Tabs.List class="w-full flex">
 				<Tabs.Trigger value="generate" class="grow">Generate</Tabs.Trigger>
