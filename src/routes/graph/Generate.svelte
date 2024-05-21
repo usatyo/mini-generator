@@ -11,6 +11,8 @@
 	import NoteIcon from './NoteIcon.svelte';
 	import RangeSlider from './RangeSlider.svelte';
 	import {
+		NODE_MAX,
+		NODE_MIN,
 		formatEdge,
 		generate,
 		generateModes,
@@ -118,10 +120,10 @@
 			</Select.Root>
 		</div>
 		{#if mode.value === 'bipartite'}
-			<RangeSlider title="node(group1)" bind:value={node1} min={1} max={30} />
-			<RangeSlider title="node(group2)" bind:value={node2} min={1} max={30} />
+			<RangeSlider title="node(group1)" bind:value={node1} min={NODE_MIN} max={NODE_MAX / 2} />
+			<RangeSlider title="node(group2)" bind:value={node2} min={NODE_MIN} max={NODE_MAX / 2} />
 		{:else}
-			<RangeSlider title="node" bind:value={node} min={1} max={50} />
+			<RangeSlider title="node" bind:value={node} min={NODE_MIN} max={NODE_MAX} />
 		{/if}
 		{#if mode.value === 'random'}
 			<RangeSlider

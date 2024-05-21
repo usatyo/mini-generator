@@ -20,6 +20,8 @@ export const modeLabels = [
 ] as const;
 export type FormatModeType = 'column' | 'row' | 'weight-row';
 export type GenerateType = (typeof generateModes)[number];
+export const NODE_MIN = 1;
+export const NODE_MAX = 50;
 
 export const generate = (
 	mode: GenerateType,
@@ -47,6 +49,7 @@ export const generate = (
 	if (mode === 'bipartite') edgeData = edgeBipartite(node, edge, part);
 	if (mode === 'path') edgeData = edgePath(node);
 
+	// shuffle nodes
 	const nodeOrder = shuffle(
 		Array(node)
 			.fill(0)
@@ -56,6 +59,19 @@ export const generate = (
 	cy.elements().remove();
 	for (let i = 0; i < node; i++) {
 		cy.add({ data: { id: (i + offset).toString() } });
+	}
+
+	// shuffle edges
+	for (let i = edgeData.length - 1; i > 0; i--) {
+		const j = randInt(0, i);
+		if (Math.random() > 0.5) {
+			[edgeData[i][0], edgeData[j][0]] = [edgeData[j][0], edgeData[i][0]];
+			[edgeData[i][1], edgeData[j][1]] = [edgeData[j][1], edgeData[i][1]];
+			[edgeData[i][0], edgeData[i][1]] = [edgeData[i][1], edgeData[i][0]];
+		} else {
+			[edgeData[i][0], edgeData[j][0]] = [edgeData[j][0], edgeData[i][0]];
+			[edgeData[i][1], edgeData[j][1]] = [edgeData[j][1], edgeData[i][1]];
+		}
 	}
 
 	for (let i = 0; i < edgeData.length; i++) {
@@ -161,6 +177,7 @@ export const edgeStar = (node: number): number[][] => {
 };
 
 const edgeCycle = (node: number): number[][] => {
+	if (node < 2) return [];
 	const ret: number[][] = [];
 
 	for (let i = 0; i < node; i++) {
