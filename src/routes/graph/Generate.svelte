@@ -6,23 +6,19 @@
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import * as Select from '$lib/components/ui/select';
 	import * as Tabs from '$lib/components/ui/tabs';
+	import {
+		NODE_MAX,
+		NODE_MIN,
+		generateModes,
+		modeLabels,
+		type FormatModeType,
+		type GenerateType
+	} from '$lib/constant';
 	import { slide } from 'svelte/transition';
 	import CopyIcon from './CopyIcon.svelte';
 	import NoteIcon from './NoteIcon.svelte';
 	import RangeSlider from './RangeSlider.svelte';
-	import {
-		NODE_MAX,
-		NODE_MIN,
-		formatEdge,
-		generate,
-		generateModes,
-		maxEdge,
-		minEdge,
-		modeLabels,
-		randInt,
-		type FormatModeType,
-		type GenerateType
-	} from './util';
+	import { formatEdge, generate, maxEdge, minEdge, randInt } from './util';
 
 	export let cy: cytoscape.Core | null = null;
 
