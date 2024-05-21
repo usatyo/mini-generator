@@ -29,7 +29,6 @@ export const generate = (
 	edge: number,
 	offset: number,
 	connected: boolean,
-	weighted: boolean,
 	weight: number[],
 	part: number,
 	cy: cytoscape.Core
@@ -85,11 +84,9 @@ export const generate = (
 			}
 		});
 
-		if (weighted) {
-			const w = randInt(weight[0], weight[1]);
-			cy.$id(`e${i + 1}`).data('weight', w);
-			edgeData[i].push(w);
-		}
+		const w = randInt(weight[0], weight[1]);
+		cy.$id(`e${i + 1}`).data('weight', w);
+		edgeData[i].push(w);
 	}
 
 	if (mode === 'bipartite') {
@@ -102,7 +99,7 @@ export const generate = (
 				cy.$id((nodeOrder[i] + offset).toString()).style('background-color', '#80B1EB'); // blue
 			}
 		}
-		// cy.layout({ name: 'breadthfirst', roots, animate: false }).run();
+		// cy.layout({ name: 'breadthfirst', roots, directed: true, animate: false }).run();
 		cy.layout({ name: 'cose', animate: false }).run();
 	} else if (mode === 'complete') {
 		cy.layout({ name: 'circle', animate: false }).run();
@@ -254,8 +251,10 @@ export const formatEdge = (
 	weighted: boolean,
 	formatMode: FormatModeType
 ): string => {
-	if (formatMode === 'column') {
+	if (formatMode === 'column' && weighted) {
 		return `${nm.join(' ')}\n${edgeData.map((e) => e.join(' ')).join('\n')}`;
+	} else if (formatMode === 'column' && !weighted) {
+		return `${nm.join(' ')}\n${edgeData.map((e) => `${e[0]} ${e[1]}`).join('\n')}`;
 	} else if (formatMode === 'row' && weighted) {
 		const u = edgeData.map((e) => e[0]).join(' ');
 		const v = edgeData.map((e) => e[1]).join(' ');

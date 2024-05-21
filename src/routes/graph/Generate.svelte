@@ -39,6 +39,7 @@
 	let weighted: boolean = false;
 	let dataWeighted: boolean = false;
 	let generated = false;
+	let directed = false;
 	let offset = '0';
 	let formatMode: FormatModeType = 'column';
 	let fixNode = 0;
@@ -51,6 +52,12 @@
 		cy?.style().selector('edge').style({ content: 'data(weight)' });
 	} else {
 		cy?.style().selector('edge').style({ content: '' });
+	}
+
+	$: if (directed) {
+		cy?.style().selector('edge').style({ 'target-arrow-shape': 'triangle' }).update();
+	} else {
+		cy?.style().selector('edge').style({ 'target-arrow-shape': 'none' }).update();
 	}
 
 	const clickHandler = () => {
@@ -81,17 +88,7 @@
 		} else if (mode.value === 'star') {
 			fixEdge = fixNode - 1;
 		}
-		fixEdges = generate(
-			mode.value,
-			fixNode,
-			fixEdge,
-			Number(offset),
-			connected,
-			weighted,
-			weight,
-			part1,
-			cy
-		);
+		fixEdges = generate(mode.value, fixNode, fixEdge, Number(offset), connected, weight, part1, cy);
 		generated = true;
 		dataWeighted = weighted;
 	};
@@ -141,6 +138,10 @@
 				<Label for="connected" class="text-md">connected</Label>
 			</div>
 		{/if}
+		<div class="flex items-center space-x-2" transition:slide>
+			<Checkbox id="directed" bind:checked={directed} />
+			<Label for="directed" class="text-md">directed</Label>
+		</div>
 		<div class="flex items-center space-x-2" transition:slide>
 			<Checkbox id="weighted" bind:checked={weighted} />
 			<Label for="weighted" class="text-md">weighted</Label>

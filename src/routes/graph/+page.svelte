@@ -34,7 +34,9 @@
 						'text-halign': 'center',
 						'line-color': '#ddd',
 						width: 2,
-						'font-size': '7px'
+						'font-size': '7px',
+						'target-arrow-color': '#ddd',
+						'curve-style': 'straight'
 					}
 				}
 			],
@@ -45,7 +47,7 @@
 			}
 		});
 
-		generate('random', 10, 10, 0, true, false, [1, 1], 0, cy);
+		generate('random', 10, 10, 0, true, [1, 20], 0, cy);
 	});
 </script>
 
