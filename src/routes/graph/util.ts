@@ -1,3 +1,4 @@
+import { UnionFind } from '$lib/unionfind';
 import type cytoscape from 'cytoscape';
 
 export const generateModes = [
@@ -20,6 +21,8 @@ export const modeLabels = [
 ] as const;
 export type FormatModeType = 'column' | 'row' | 'weight-row';
 export type GenerateType = (typeof generateModes)[number];
+export const NODE_MIN = 1;
+export const NODE_MAX = 50;
 
 export const generate = (
 	mode: GenerateType,
@@ -27,7 +30,6 @@ export const generate = (
 	edge: number,
 	offset: number,
 	connected: boolean,
-	weighted: boolean,
 	weight: number[],
 	part: number,
 	cy: cytoscape.Core
@@ -44,9 +46,11 @@ export const generate = (
 	if (mode === 'complete') edgeData = edgeComplete(node);
 	if (mode === 'star') edgeData = edgeStar(node);
 	if (mode === 'cycle') edgeData = edgeCycle(node);
-	if (mode === 'bipartite') edgeData = edgeBipartite(node, edge, part);
+	if (mode === 'bipartite' && !connected) edgeData = edgeBipartite(node, edge, part);
+	if (mode === 'bipartite' && connected) edgeData = edgeConnectedBipartite(node, edge, part);
 	if (mode === 'path') edgeData = edgePath(node);
 
+	// shuffle nodes
 	const nodeOrder = shuffle(
 		Array(node)
 			.fill(0)
@@ -56,6 +60,19 @@ export const generate = (
 	cy.elements().remove();
 	for (let i = 0; i < node; i++) {
 		cy.add({ data: { id: (i + offset).toString() } });
+	}
+
+	// shuffle edges
+	for (let i = edgeData.length - 1; i > 0; i--) {
+		const j = randInt(0, i);
+		if (Math.random() > 0.5) {
+			[edgeData[i][0], edgeData[j][0]] = [edgeData[j][0], edgeData[i][0]];
+			[edgeData[i][1], edgeData[j][1]] = [edgeData[j][1], edgeData[i][1]];
+			[edgeData[i][0], edgeData[i][1]] = [edgeData[i][1], edgeData[i][0]];
+		} else {
+			[edgeData[i][0], edgeData[j][0]] = [edgeData[j][0], edgeData[i][0]];
+			[edgeData[i][1], edgeData[j][1]] = [edgeData[j][1], edgeData[i][1]];
+		}
 	}
 
 	for (let i = 0; i < edgeData.length; i++) {
@@ -69,11 +86,9 @@ export const generate = (
 			}
 		});
 
-		if (weighted) {
-			const w = randInt(weight[0], weight[1]);
-			cy.$id(`e${i + 1}`).data('weight', w);
-			edgeData[i].push(w);
-		}
+		const w = randInt(weight[0], weight[1]);
+		cy.$id(`e${i + 1}`).data('weight', w);
+		edgeData[i].push(w);
 	}
 
 	if (mode === 'bipartite') {
@@ -86,7 +101,7 @@ export const generate = (
 				cy.$id((nodeOrder[i] + offset).toString()).style('background-color', '#80B1EB'); // blue
 			}
 		}
-		// cy.layout({ name: 'breadthfirst', roots, animate: false }).run();
+		// cy.layout({ name: 'breadthfirst', roots, directed: true, animate: false }).run();
 		cy.layout({ name: 'cose', animate: false }).run();
 	} else if (mode === 'complete') {
 		cy.layout({ name: 'circle', animate: false }).run();
@@ -161,6 +176,7 @@ export const edgeStar = (node: number): number[][] => {
 };
 
 const edgeCycle = (node: number): number[][] => {
+	if (node < 2) return [];
 	const ret: number[][] = [];
 
 	for (let i = 0; i < node; i++) {
@@ -188,6 +204,37 @@ const edgeBipartite = (node: number, edge: number, part: number): number[][] => 
 	const ret = edgeFree(node, edge, used);
 
 	return ret;
+};
+
+const edgeConnectedBipartite = (node: number, edge: number, part: number): number[][] => {
+	const uf = new UnionFind(node);
+	const ret: number[][] = [];
+	const used: Set<number> = new Set();
+
+	for (let i = 0; i < part; i++) {
+		for (let j = i + 1; j < part; j++) {
+			used.add(i * node + j);
+		}
+	}
+
+	for (let i = part; i < node; i++) {
+		for (let j = i + 1; j < node; j++) {
+			used.add(i * node + j);
+		}
+	}
+
+	let count = node - 1;
+	while (count > 0) {
+		const u = randInt(0, part - 1);
+		const v = randInt(part, node - 1);
+		if (uf.merge(u, v)) {
+			used.add(u * node + v);
+			ret.push([u, v]);
+			count--;
+		}
+	}
+
+	return ret.concat(edgeFree(node, edge - node + 1, used));
 };
 
 const edgePath = (node: number): number[][] => {
@@ -237,8 +284,10 @@ export const formatEdge = (
 	weighted: boolean,
 	formatMode: FormatModeType
 ): string => {
-	if (formatMode === 'column') {
+	if (formatMode === 'column' && weighted) {
 		return `${nm.join(' ')}\n${edgeData.map((e) => e.join(' ')).join('\n')}`;
+	} else if (formatMode === 'column' && !weighted) {
+		return `${nm.join(' ')}\n${edgeData.map((e) => `${e[0]} ${e[1]}`).join('\n')}`;
 	} else if (formatMode === 'row' && weighted) {
 		const u = edgeData.map((e) => e[0]).join(' ');
 		const v = edgeData.map((e) => e[1]).join(' ');
