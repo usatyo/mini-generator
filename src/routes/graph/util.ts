@@ -1,3 +1,4 @@
+import { UnionFind } from '$lib/unionfind';
 import type cytoscape from 'cytoscape';
 
 export const generateModes = [
@@ -45,7 +46,8 @@ export const generate = (
 	if (mode === 'complete') edgeData = edgeComplete(node);
 	if (mode === 'star') edgeData = edgeStar(node);
 	if (mode === 'cycle') edgeData = edgeCycle(node);
-	if (mode === 'bipartite') edgeData = edgeBipartite(node, edge, part);
+	if (mode === 'bipartite' && !connected) edgeData = edgeBipartite(node, edge, part);
+	if (mode === 'bipartite' && connected) edgeData = edgeConnectedBipartite(node, edge, part);
 	if (mode === 'path') edgeData = edgePath(node);
 
 	// shuffle nodes
@@ -202,6 +204,37 @@ const edgeBipartite = (node: number, edge: number, part: number): number[][] => 
 	const ret = edgeFree(node, edge, used);
 
 	return ret;
+};
+
+const edgeConnectedBipartite = (node: number, edge: number, part: number): number[][] => {
+	const uf = new UnionFind(node);
+	const ret: number[][] = [];
+	const used: Set<number> = new Set();
+
+	for (let i = 0; i < part; i++) {
+		for (let j = i + 1; j < part; j++) {
+			used.add(i * node + j);
+		}
+	}
+
+	for (let i = part; i < node; i++) {
+		for (let j = i + 1; j < node; j++) {
+			used.add(i * node + j);
+		}
+	}
+
+	let count = node - 1;
+	while (count > 0) {
+		const u = randInt(0, part - 1);
+		const v = randInt(part, node - 1);
+		if (uf.merge(u, v)) {
+			used.add(u * node + v);
+			ret.push([u, v]);
+			count--;
+		}
+	}
+
+	return ret.concat(edgeFree(node, edge - node + 1, used));
 };
 
 const edgePath = (node: number): number[][] => {

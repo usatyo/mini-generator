@@ -71,7 +71,11 @@
 			part1 = randInt(node1[0], node1[1]);
 			part2 = randInt(node2[0], node2[1]);
 			fixNode = part1 + part2;
-			lowerEdge = Math.max(0, edge[0]);
+			if (connected) {
+				lowerEdge = Math.max(fixNode - 1, edge[0]);
+			} else {
+				lowerEdge = Math.max(0, edge[0]);
+			}
 			upperEdge = Math.min(part1 * part2, edge[1]);
 		} else {
 			fixNode = randInt(node[0], node[1]);
@@ -130,9 +134,14 @@
 				max={maxEdge(node[1], mode.value)}
 			/>
 		{:else if mode.value === 'bipartite'}
-			<RangeSlider title="edge" bind:value={edge} min={0} max={node1[1] * node2[1]} />
+			<RangeSlider
+				title="edge"
+				bind:value={edge}
+				min={connected ? node1[0] + node2[0] - 1 : 0}
+				max={node1[1] * node2[1]}
+			/>
 		{/if}
-		{#if mode.value === 'random'}
+		{#if mode.value === 'random' || mode.value === 'bipartite'}
 			<div class="flex items-center space-x-2" transition:slide>
 				<Checkbox id="connected" bind:checked={connected} />
 				<Label for="connected" class="text-md">connected</Label>
