@@ -117,13 +117,22 @@
 	};
 
 	$: {
-		if (cy) {
-			initializeGraph($page.url.searchParams, cy);
+		if (cy && !generated) {
+			const initGraphInfo = initializeGraph($page.url.searchParams, cy);
+			initializeGraphParameter(initGraphInfo);
 		}
 	}
 
 	const copyToClipboard = () => {
 		navigator.clipboard.writeText(generatedText);
+	};
+
+	const initializeGraphParameter = (info: GraphInfo) => {
+		mode = { value: info.mode, label: modeLabels[generateModes.indexOf(info.mode)] };
+		connected = info.connected;
+		weighted = info.weighted;
+		directed = info.directed;
+		offset = info.offset.toString();
 	};
 </script>
 
@@ -134,13 +143,19 @@
 	<Card.Content class="flex flex-col space-y-6">
 		<div>
 			<label for="mode" class="text-md">graph type</label>
-			<Select.Root bind:selected={mode} name="mode">
+			<Select.Root
+				selected={mode}
+				name="mode"
+				onSelectedChange={(v) => {
+					mode = { value: v?.value ?? generateModes[0], label: v?.label ?? modeLabels[0] };
+				}}
+			>
 				<Select.Trigger class="text-md mt-1">
 					<Select.Value />
 				</Select.Trigger>
 				<Select.Content>
-					{#each generateModes as mode, i}
-						<Select.Item value={mode} label={modeLabels[i]} />
+					{#each generateModes as md, i}
+						<Select.Item value={md} label={modeLabels[i]} />
 					{/each}
 				</Select.Content>
 			</Select.Root>

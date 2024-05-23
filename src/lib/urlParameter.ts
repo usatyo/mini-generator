@@ -10,26 +10,25 @@ export const urlWithParameter = (props: GraphInfo, edges: number[][]): string =>
 	return url + '?' + searchParams.toString();
 };
 
-export const initializeGraph = (searchParams: URLSearchParams, cy: cytoscape.Core): void => {
+export const initializeGraph = (searchParams: URLSearchParams, cy: cytoscape.Core): GraphInfo => {
 	const paramObj = searchParams.get('data')
 		? (JSON.parse(urlSafeDecode(searchParams.get('data') ?? '')) as GraphInfo & { edges: string })
 		: undefined;
-	generate(
-		{
-			mode: (paramObj?.mode ?? 'random') as GenerateType,
-			node: Number(paramObj?.node ?? 10),
-			edge: Number(paramObj?.edge ?? 10),
-			offset: Number(paramObj?.offset ?? 0),
-			connected: paramObj?.connected ?? false,
-			weighted: paramObj?.weighted ?? false,
-			directed: paramObj?.directed ?? false,
-			weight: paramObj?.weight ?? [],
-			part: Number(searchParams.get('p') ?? 5),
-			cy: cy
-		},
-		paramObj === undefined ? undefined : stringToEdges(paramObj.edges)
-	);
-	return;
+
+	const graphInfo = {
+		mode: (paramObj?.mode ?? 'random') as GenerateType,
+		node: Number(paramObj?.node ?? 10),
+		edge: Number(paramObj?.edge ?? 10),
+		offset: Number(paramObj?.offset ?? 0),
+		connected: paramObj?.connected ?? false,
+		weighted: paramObj?.weighted ?? false,
+		directed: paramObj?.directed ?? false,
+		weight: paramObj?.weight ?? [],
+		part: Number(searchParams.get('p') ?? 5),
+		cy: cy
+	};
+	generate(graphInfo, paramObj === undefined ? undefined : stringToEdges(paramObj.edges));
+	return graphInfo;
 };
 
 const edgesToString = (edges: number[][]): string => {
