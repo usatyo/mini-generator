@@ -2,20 +2,18 @@
 	import * as Card from '$lib/components/ui/card';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import cytoscape from 'cytoscape';
-	import { afterUpdate } from 'svelte';
+	import { onMount } from 'svelte';
 	import Generate from './Generate.svelte';
 	import Visualize from './Visualize.svelte';
-	import { generate } from './util';
 
 	let container: HTMLElement | null = null;
 	let cy: cytoscape.Core | null = null;
 
-	afterUpdate(() => {
+	onMount(() => {
 		container = document.getElementById('cy');
 		if (!container) return;
 		cy = cytoscape({
 			container: container,
-
 			style: [
 				{
 					selector: 'node',
@@ -40,14 +38,11 @@
 					}
 				}
 			],
-
 			layout: {
 				name: 'cose',
 				animate: false
 			}
 		});
-
-		generate('random', 10, 10, 0, true, [1, 20], 0, cy);
 	});
 </script>
 

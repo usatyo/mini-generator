@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import { Checkbox } from '$lib/components/ui/checkbox';
@@ -9,15 +10,19 @@
 	import {
 		NODE_MAX,
 		NODE_MIN,
+		WEIGHT_MAX,
+		WEIGHT_MIN,
 		generateModes,
 		modeLabels,
 		type FormatModeType,
 		type GenerateType
 	} from '$lib/constant';
+	import { initializeGraph, urlWithParameter } from '$lib/urlParameter';
 	import { slide } from 'svelte/transition';
 	import CopyIcon from './CopyIcon.svelte';
 	import NoteIcon from './NoteIcon.svelte';
 	import RangeSlider from './RangeSlider.svelte';
+	import ShareButton from './ShareButton.svelte';
 	import { formatEdge, generate, maxEdge, minEdge, randInt } from './util';
 
 	export let cy: cytoscape.Core | null = null;
@@ -31,7 +36,7 @@
 	let node2: number[] = [5, 10];
 	let edge: number[] = [20, 30];
 	let weight: number[] = [1, 20];
-	let connected: boolean = true;
+	let connected: boolean = false;
 	let weighted: boolean = false;
 	let dataWeighted: boolean = false;
 	let generated = false;
@@ -41,6 +46,7 @@
 	let fixNode = 0;
 	let fixEdge = 0;
 	let fixEdges: number[][] = [];
+	let generatedUrl = '';
 
 	$: generatedText = formatEdge([fixNode, fixEdge], fixEdges, dataWeighted, formatMode);
 
@@ -88,10 +94,42 @@
 		} else if (mode.value === 'star') {
 			fixEdge = fixNode - 1;
 		}
-		fixEdges = generate(mode.value, fixNode, fixEdge, Number(offset), connected, weight, part1, cy);
+		fixEdges = generate({
+			mode: mode.value,
+			node: fixNode,
+			edge: fixEdge,
+			offset: Number(offset),
+			connected,
+			weighted,
+			directed,
+			weight,
+			part: part1,
+			cy
+		});
 		generated = true;
 		dataWeighted = weighted;
+		generatedUrl = urlWithParameter(
+			{
+				mode: mode.value,
+				node: fixNode,
+				edge: fixEdge,
+				connected,
+				weighted,
+				directed,
+				weight,
+				offset: Number(offset),
+				part: part1,
+				cy: null
+			},
+			fixEdges
+		);
 	};
+
+	$: {
+		if (cy) {
+			initializeGraph($page.url.searchParams, cy);
+		}
+	}
 
 	const copyToClipboard = () => {
 		navigator.clipboard.writeText(generatedText);
@@ -152,7 +190,7 @@
 			<Label for="weighted" class="text-md">weighted</Label>
 		</div>
 		{#if weighted}
-			<RangeSlider title="weight" bind:value={weight} min={0} max={100} />
+			<RangeSlider title="weight" bind:value={weight} min={WEIGHT_MIN} max={WEIGHT_MAX} />
 		{/if}
 		<Tabs.Root bind:value={offset} class="w-full">
 			<Tabs.List class="w-full">
@@ -179,3 +217,5 @@
 		{/if}
 	</Card.Footer>
 </Card.Root>
+
+<ShareButton text="hello" url={generatedUrl} />

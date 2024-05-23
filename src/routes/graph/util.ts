@@ -1,43 +1,37 @@
-import type { FormatModeType, GenerateType } from '$lib/constant';
+import type { FormatModeType, GenerateType, GraphInfo } from '$lib/constant';
 import { UnionFind } from '$lib/unionfind';
-import type cytoscape from 'cytoscape';
 
-export const generate = (
-	mode: GenerateType,
-	node: number,
-	edge: number,
-	offset: number,
-	connected: boolean,
-	weight: number[],
-	part: number,
-	cy: cytoscape.Core
-): number[][] => {
+export const generate = (props: GraphInfo, edges?: number[][]): number[][] => {
+	if (!props.cy) return [];
 	let edgeData: number[][] = [];
-	if (mode === 'random' && !connected) edgeData = edgeFree(node, edge, new Set());
-	if (mode === 'random' && connected) {
-		const used = edgeTree(node);
-		const usedSet = new Set(used.map((e) => e[0] * node + e[1]));
+	if (props.mode === 'random' && !props.connected)
+		edgeData = edgeFree(props.node, props.edge, new Set());
+	if (props.mode === 'random' && props.connected) {
+		const used = edgeTree(props.node);
+		const usedSet = new Set(used.map((e) => e[0] * props.node + e[1]));
 
-		edgeData = used.concat(edgeFree(node, edge - used.length, usedSet));
+		edgeData = used.concat(edgeFree(props.node, props.edge - used.length, usedSet));
 	}
-	if (mode === 'tree') edgeData = edgeTree(node);
-	if (mode === 'complete') edgeData = edgeComplete(node);
-	if (mode === 'star') edgeData = edgeStar(node);
-	if (mode === 'cycle') edgeData = edgeCycle(node);
-	if (mode === 'bipartite' && !connected) edgeData = edgeBipartite(node, edge, part);
-	if (mode === 'bipartite' && connected) edgeData = edgeConnectedBipartite(node, edge, part);
-	if (mode === 'path') edgeData = edgePath(node);
+	if (props.mode === 'tree') edgeData = edgeTree(props.node);
+	if (props.mode === 'complete') edgeData = edgeComplete(props.node);
+	if (props.mode === 'star') edgeData = edgeStar(props.node);
+	if (props.mode === 'cycle') edgeData = edgeCycle(props.node);
+	if (props.mode === 'bipartite' && !props.connected)
+		edgeData = edgeBipartite(props.node, props.edge, props.part);
+	if (props.mode === 'bipartite' && props.connected)
+		edgeData = edgeConnectedBipartite(props.node, props.edge, props.part);
+	if (props.mode === 'path') edgeData = edgePath(props.node);
 
 	// shuffle nodes
-	const nodeOrder = shuffle(
-		Array(node)
+	let nodeOrder = shuffle(
+		Array(props.node)
 			.fill(0)
 			.map((_, i) => i)
 	);
 
-	cy.elements().remove();
-	for (let i = 0; i < node; i++) {
-		cy.add({ data: { id: (i + offset).toString() } });
+	props.cy.elements().remove();
+	for (let i = 0; i < props.node; i++) {
+		props.cy.add({ data: { id: (i + props.offset).toString() } });
 	}
 
 	// shuffle edges
@@ -53,10 +47,17 @@ export const generate = (
 		}
 	}
 
+	if (edges) {
+		nodeOrder = Array(props.node)
+			.fill(0)
+			.map((_, i) => i);
+		edgeData = edges ?? edgeData;
+	}
+
 	for (let i = 0; i < edgeData.length; i++) {
-		edgeData[i][0] = nodeOrder[edgeData[i][0]] + offset;
-		edgeData[i][1] = nodeOrder[edgeData[i][1]] + offset;
-		cy.add({
+		edgeData[i][0] = nodeOrder[edgeData[i][0]] + props.offset;
+		edgeData[i][1] = nodeOrder[edgeData[i][1]] + props.offset;
+		props.cy.add({
 			data: {
 				id: `e${i + 1}`,
 				source: edgeData[i][0].toString(),
@@ -64,27 +65,27 @@ export const generate = (
 			}
 		});
 
-		const w = randInt(weight[0], weight[1]);
-		cy.$id(`e${i + 1}`).data('weight', w);
+		const w = randInt(props.weight[0], props.weight[1]);
+		props.cy.$id(`e${i + 1}`).data('weight', w);
 		edgeData[i].push(w);
 	}
 
-	if (mode === 'bipartite') {
+	if (props.mode === 'bipartite') {
 		const roots: string[] = [];
-		for (let i = 0; i < node; i++) {
-			if (i < part) {
-				roots.push((nodeOrder[i] + offset).toString());
-				cy.$id((nodeOrder[i] + offset).toString()).style('background-color', '#F7BD5B'); // orange
+		for (let i = 0; i < props.node; i++) {
+			if (i < props.part) {
+				roots.push((nodeOrder[i] + props.offset).toString());
+				props.cy.$id((nodeOrder[i] + props.offset).toString()).style('background-color', '#F7BD5B'); // orange
 			} else {
-				cy.$id((nodeOrder[i] + offset).toString()).style('background-color', '#80B1EB'); // blue
+				props.cy.$id((nodeOrder[i] + props.offset).toString()).style('background-color', '#80B1EB'); // blue
 			}
 		}
-		// cy.layout({ name: 'breadthfirst', roots, directed: true, animate: false }).run();
-		cy.layout({ name: 'cose', animate: false }).run();
-	} else if (mode === 'complete') {
-		cy.layout({ name: 'circle', animate: false }).run();
+		// props.cy.layout({ name: 'breadthfirst', roots, directed: true, animate: false }).run();
+		props.cy.layout({ name: 'cose', animate: false }).run();
+	} else if (props.mode === 'complete') {
+		props.cy.layout({ name: 'circle', animate: false }).run();
 	} else {
-		cy.layout({ name: 'cose', animate: false }).run();
+		props.cy.layout({ name: 'cose', animate: false }).run();
 	}
 
 	return edgeData;
