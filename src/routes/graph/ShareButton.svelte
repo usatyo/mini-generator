@@ -2,17 +2,13 @@
 	import logo from '$lib/assets/logo-white.png';
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { afterUpdate } from 'svelte';
 	import { fade } from 'svelte/transition';
 
 	export let disabled;
 	export let text = '';
 	export let url: string = '';
-	let href = 'https://twitter.com/intent/tweet';
 
-	afterUpdate(() => {
-		href = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
-	});
+	$: href = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
 </script>
 
 <div class="absolute z-10 right-3 top-3 shadow-lg h-11" transition:fade>
@@ -26,7 +22,7 @@
 		</Tooltip.Trigger>
 		<Tooltip.Content>
 			{#if disabled}
-				<span>Max 16 node</span>
+				<span>Max 16 nodes</span>
 			{:else}
 				<span>Share on X</span>
 			{/if}

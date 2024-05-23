@@ -38,9 +38,9 @@
 				<Tabs.Trigger value="generate" class="grow">Generate</Tabs.Trigger>
 				<Tabs.Trigger value="visualize" class="grow">Visualize</Tabs.Trigger>
 			</Tabs.List>
-			<Tabs.Content value="generate"
-				><Generate {cy} bind:generatedUrl bind:disabledShareButton bind:generated /></Tabs.Content
-			>
+			<Tabs.Content value="generate">
+				<Generate {cy} bind:generatedUrl bind:disabledShareButton bind:generated />
+			</Tabs.Content>
 			<Tabs.Content value="visualize"><Visualize /></Tabs.Content>
 		</Tabs.Root>
 	</div>
