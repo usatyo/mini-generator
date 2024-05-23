@@ -1,3 +1,5 @@
+import type cytoscape from 'cytoscape';
+
 export const generateModes = [
 	'random',
 	'tree',
@@ -35,3 +37,29 @@ export const NODE_MIN = 1;
 export const NODE_MAX = 50;
 export const WEIGHT_MIN = 0;
 export const WEIGHT_MAX = 20;
+export const MAX_URL_NODE = 16;
+
+export const defaultStyle: cytoscape.Stylesheet[] = [
+	{
+		selector: 'node',
+		css: {
+			content: 'data(id)',
+			'text-valign': 'center',
+			'text-halign': 'center',
+			'background-color': '#F7BD5B',
+			'font-size': '10px'
+		}
+	},
+	{
+		selector: 'edge',
+		css: {
+			'text-valign': 'center',
+			'text-halign': 'center',
+			'line-color': '#ddd',
+			width: 2,
+			'font-size': '7px',
+			'target-arrow-color': '#ddd',
+			'curve-style': 'straight'
+		}
+	}
+];

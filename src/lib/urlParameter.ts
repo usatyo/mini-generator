@@ -1,12 +1,10 @@
 import { generate } from '../routes/graph/util';
-import type { GenerateType, GraphInfo } from './constant';
-
-const MAX_URL_NODE = 16;
+import { MAX_URL_NODE, type GenerateType, type GraphInfo } from './constant';
 
 export const urlWithParameter = (props: GraphInfo, edges: number[][]): string => {
 	const url = 'https://mini-generator.netlify.app/graph';
 	const searchParams = new URLSearchParams();
-	const data = { ...props, edges: edgesToString(edges) };
+	const { cy: _cy, ...data } = { ...props, edges: edgesToString(edges) };
 	searchParams.set('data', urlSafeEncode(JSON.stringify(data)));
 
 	return url + '?' + searchParams.toString();

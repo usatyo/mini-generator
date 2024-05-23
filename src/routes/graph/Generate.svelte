@@ -8,6 +8,7 @@
 	import * as Select from '$lib/components/ui/select';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import {
+		MAX_URL_NODE,
 		NODE_MAX,
 		NODE_MIN,
 		WEIGHT_MAX,
@@ -15,17 +16,20 @@
 		generateModes,
 		modeLabels,
 		type FormatModeType,
-		type GenerateType
+		type GenerateType,
+		type GraphInfo
 	} from '$lib/constant';
 	import { initializeGraph, urlWithParameter } from '$lib/urlParameter';
 	import { slide } from 'svelte/transition';
 	import CopyIcon from './CopyIcon.svelte';
 	import NoteIcon from './NoteIcon.svelte';
 	import RangeSlider from './RangeSlider.svelte';
-	import ShareButton from './ShareButton.svelte';
 	import { formatEdge, generate, maxEdge, minEdge, randInt } from './util';
 
 	export let cy: cytoscape.Core | null = null;
+	export let generatedUrl = '';
+	export let disabledShareButton: boolean;
+	export let generated = false;
 
 	let mode: { value: GenerateType; label: string } = {
 		value: generateModes[0],
@@ -39,14 +43,12 @@
 	let connected: boolean = false;
 	let weighted: boolean = false;
 	let dataWeighted: boolean = false;
-	let generated = false;
 	let directed = false;
 	let offset = '0';
 	let formatMode: FormatModeType = 'column';
 	let fixNode = 0;
 	let fixEdge = 0;
 	let fixEdges: number[][] = [];
-	let generatedUrl = '';
 
 	$: generatedText = formatEdge([fixNode, fixEdge], fixEdges, dataWeighted, formatMode);
 
@@ -94,7 +96,7 @@
 		} else if (mode.value === 'star') {
 			fixEdge = fixNode - 1;
 		}
-		fixEdges = generate({
+		const graphInfo: GraphInfo = {
 			mode: mode.value,
 			node: fixNode,
 			edge: fixEdge,
@@ -105,24 +107,13 @@
 			weight,
 			part: part1,
 			cy
-		});
+		};
+
+		fixEdges = generate(graphInfo);
 		generated = true;
 		dataWeighted = weighted;
-		generatedUrl = urlWithParameter(
-			{
-				mode: mode.value,
-				node: fixNode,
-				edge: fixEdge,
-				connected,
-				weighted,
-				directed,
-				weight,
-				offset: Number(offset),
-				part: part1,
-				cy: null
-			},
-			fixEdges
-		);
+		generatedUrl = urlWithParameter(graphInfo, fixEdges);
+		disabledShareButton = fixNode > MAX_URL_NODE;
 	};
 
 	$: {
@@ -217,5 +208,3 @@
 		{/if}
 	</Card.Footer>
 </Card.Root>
-
-<ShareButton text="hello" url={generatedUrl} />
