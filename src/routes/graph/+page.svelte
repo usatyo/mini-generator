@@ -5,6 +5,7 @@
 	import cytoscape from 'cytoscape';
 	import { onMount } from 'svelte';
 	import Generate from './Generate.svelte';
+	import Head from './Head.svelte';
 	import ShareButton from './ShareButton.svelte';
 	import Visualize from './Visualize.svelte';
 
@@ -23,6 +24,8 @@
 		});
 	});
 </script>
+
+<Head />
 
 <div class="h-full justify-evenly py-[10vh] lg:flex lg:flex-row">
 	<Card.Root class="relative">

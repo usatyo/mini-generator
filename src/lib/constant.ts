@@ -36,7 +36,7 @@ export type GraphInfo = {
 export const NODE_MIN = 1;
 export const NODE_MAX = 50;
 export const WEIGHT_MIN = 0;
-export const WEIGHT_MAX = 20;
+export const WEIGHT_MAX = 99;
 export const MAX_URL_NODE = 16;
 
 export const defaultStyle: cytoscape.Stylesheet[] = [
@@ -63,3 +63,5 @@ export const defaultStyle: cytoscape.Stylesheet[] = [
 		}
 	}
 ];
+
+export const commonUrl = 'https://mini-generator.netlify.app/graph';
