@@ -1,4 +1,5 @@
 <script>
+	import { page } from '$app/stores';
 	import { commonUrl } from '$lib/constant';
 </script>
 
@@ -12,7 +13,7 @@
 	<meta property="og:title" content="Mini Generator" />
 	<meta property="og:type" content="website" />
 	<meta property="og:description" content="グラフのテストケース作成・共有ができます" />
-	<meta property="og:image" content="画像のURL" />
+	<meta property="og:image" content="{$page.url.origin}/ogp.png" />
 	<meta name="twitter:card" content="summary" />
 	<meta property="og:site_name" content="Mini Generator" />
 	<meta property="og:locale" content="ja_JP" />
