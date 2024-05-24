@@ -65,7 +65,7 @@ export const generate = (props: GraphInfo, edges?: number[][]): number[][] => {
 			}
 		});
 
-		const w = randInt(props.weight[0], props.weight[1]);
+		const w = props.weight[i];
 		props.cy.$id(`e${i + 1}`).data('weight', w);
 		edgeData[i].push(w);
 	}

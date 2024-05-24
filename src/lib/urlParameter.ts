@@ -1,4 +1,4 @@
-import { generate } from '../routes/graph/util';
+import { generate, randInt } from '../routes/graph/util';
 import { MAX_URL_NODE, type GenerateType, type GraphInfo } from './constant';
 
 export const urlWithParameter = (props: GraphInfo, edges: number[][]): string => {
@@ -10,7 +10,10 @@ export const urlWithParameter = (props: GraphInfo, edges: number[][]): string =>
 	return url + '?' + searchParams.toString();
 };
 
-export const initializeGraph = (searchParams: URLSearchParams, cy: cytoscape.Core): GraphInfo => {
+export const initializeGraph = (
+	searchParams: URLSearchParams,
+	cy: cytoscape.Core
+): { info: GraphInfo; edges: number[][] } => {
 	const paramObj = searchParams.get('data')
 		? (JSON.parse(urlSafeDecode(searchParams.get('data') ?? '')) as GraphInfo & { edges: string })
 		: undefined;
@@ -23,12 +26,19 @@ export const initializeGraph = (searchParams: URLSearchParams, cy: cytoscape.Cor
 		connected: paramObj?.connected ?? false,
 		weighted: paramObj?.weighted ?? false,
 		directed: paramObj?.directed ?? false,
-		weight: paramObj?.weight ?? [],
+		weight:
+			paramObj?.weight ??
+			Array(10)
+				.fill(0)
+				.map(() => randInt(1, 20)),
 		part: Number(searchParams.get('p') ?? 5),
 		cy: cy
 	};
-	generate(graphInfo, paramObj === undefined ? undefined : stringToEdges(paramObj.edges));
-	return graphInfo;
+	const fixEdges = generate(
+		graphInfo,
+		paramObj === undefined ? undefined : stringToEdges(paramObj.edges)
+	);
+	return { info: graphInfo, edges: fixEdges };
 };
 
 const edgesToString = (edges: number[][]): string => {

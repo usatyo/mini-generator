@@ -35,14 +35,13 @@
 		value: generateModes[0],
 		label: modeLabels[0]
 	};
-	let node: number[] = [5, 15];
-	let node1: number[] = [5, 10];
-	let node2: number[] = [5, 10];
-	let edge: number[] = [20, 30];
-	let weight: number[] = [1, 20];
+	let nodeRange: number[] = [5, 15];
+	let node1Range: number[] = [5, 10];
+	let node2Range: number[] = [5, 10];
+	let edgeRange: number[] = [20, 30];
+	let weightRange: number[] = [1, 20];
 	let connected: boolean = false;
 	let weighted: boolean = false;
-	let dataWeighted: boolean = false;
 	let directed = false;
 	let offset = '0';
 	let formatMode: FormatModeType = 'column';
@@ -50,19 +49,27 @@
 	let fixEdge = 0;
 	let fixEdges: number[][] = [];
 
-	$: generatedText = formatEdge([fixNode, fixEdge], fixEdges, dataWeighted, formatMode);
+	$: generatedText = formatEdge([fixNode, fixEdge], fixEdges, weighted, formatMode);
 
-	$: if (weighted) {
-		cy?.style().selector('edge').style({ content: 'data(weight)' });
-	} else {
-		cy?.style().selector('edge').style({ content: '' });
-	}
+	$: updateWeighted(weighted);
 
-	$: if (directed) {
-		cy?.style().selector('edge').style({ 'target-arrow-shape': 'triangle' }).update();
-	} else {
-		cy?.style().selector('edge').style({ 'target-arrow-shape': 'none' }).update();
-	}
+	$: updateDirected(directed);
+
+	const updateWeighted = (val: boolean) => {
+		if (val) {
+			cy?.style().selector('edge').style({ content: 'data(weight)' }).update();
+		} else {
+			cy?.style().selector('edge').style({ content: '' }).update();
+		}
+	};
+
+	const updateDirected = (val: boolean) => {
+		if (val) {
+			cy?.style().selector('edge').style({ 'target-arrow-shape': 'triangle' }).update();
+		} else {
+			cy?.style().selector('edge').style({ 'target-arrow-shape': 'none' }).update();
+		}
+	};
 
 	const clickHandler = () => {
 		if (!cy) return;
@@ -72,19 +79,19 @@
 		let upperEdge = 0;
 		fixNode = 0;
 		if (mode.value === 'bipartite') {
-			part1 = randInt(node1[0], node1[1]);
-			part2 = randInt(node2[0], node2[1]);
+			part1 = randInt(node1Range[0], node1Range[1]);
+			part2 = randInt(node2Range[0], node2Range[1]);
 			fixNode = part1 + part2;
 			if (connected) {
-				lowerEdge = Math.max(fixNode - 1, edge[0]);
+				lowerEdge = Math.max(fixNode - 1, edgeRange[0]);
 			} else {
-				lowerEdge = Math.max(0, edge[0]);
+				lowerEdge = Math.max(0, edgeRange[0]);
 			}
-			upperEdge = Math.min(part1 * part2, edge[1]);
+			upperEdge = Math.min(part1 * part2, edgeRange[1]);
 		} else {
-			fixNode = randInt(node[0], node[1]);
-			lowerEdge = Math.max(minEdge(fixNode, mode.value, connected), edge[0]);
-			upperEdge = Math.min(maxEdge(fixNode, mode.value), edge[1]);
+			fixNode = randInt(nodeRange[0], nodeRange[1]);
+			lowerEdge = Math.max(minEdge(fixNode, mode.value, connected), edgeRange[0]);
+			upperEdge = Math.min(maxEdge(fixNode, mode.value), edgeRange[1]);
 		}
 		fixEdge = 0;
 		if (mode.value === 'random' || mode.value === 'bipartite') {
@@ -96,6 +103,11 @@
 		} else if (mode.value === 'star') {
 			fixEdge = fixNode - 1;
 		}
+
+		const weight = Array(fixEdge)
+			.fill(0)
+			.map(() => randInt(weightRange[0], weightRange[1]));
+
 		const graphInfo: GraphInfo = {
 			mode: mode.value,
 			node: fixNode,
@@ -111,15 +123,15 @@
 
 		fixEdges = generate(graphInfo);
 		generated = true;
-		dataWeighted = weighted;
 		generatedUrl = urlWithParameter(graphInfo, fixEdges);
 		disabledShareButton = fixNode > MAX_URL_NODE;
 	};
 
 	$: {
 		if (cy && !generated) {
-			const initGraphInfo = initializeGraph($page.url.searchParams, cy);
-			initializeGraphParameter(initGraphInfo);
+			const { info: initGraphInfo, edges: initEdges } = initializeGraph($page.url.searchParams, cy);
+			initializeGraphParameter(initGraphInfo, initEdges);
+			generated = true;
 		}
 	}
 
@@ -127,12 +139,19 @@
 		navigator.clipboard.writeText(generatedText);
 	};
 
-	const initializeGraphParameter = (info: GraphInfo) => {
+	const initializeGraphParameter = (info: GraphInfo, initEdges: number[][]) => {
 		mode = { value: info.mode, label: modeLabels[generateModes.indexOf(info.mode)] };
+		fixNode = info.node;
+		fixEdge = info.edge;
+		fixEdges = initEdges;
 		connected = info.connected;
 		weighted = info.weighted;
 		directed = info.directed;
+		updateWeighted(weighted);
+		updateDirected(directed);
 		offset = info.offset.toString();
+		generatedText = formatEdge([info.node, info.edge], initEdges, info.weighted, formatMode);
+		disabledShareButton = fixNode > MAX_URL_NODE;
 	};
 </script>
 
@@ -161,24 +180,24 @@
 			</Select.Root>
 		</div>
 		{#if mode.value === 'bipartite'}
-			<RangeSlider title="node(group1)" bind:value={node1} min={NODE_MIN} max={NODE_MAX / 2} />
-			<RangeSlider title="node(group2)" bind:value={node2} min={NODE_MIN} max={NODE_MAX / 2} />
+			<RangeSlider title="node(group1)" bind:value={node1Range} min={NODE_MIN} max={NODE_MAX / 2} />
+			<RangeSlider title="node(group2)" bind:value={node2Range} min={NODE_MIN} max={NODE_MAX / 2} />
 		{:else}
-			<RangeSlider title="node" bind:value={node} min={NODE_MIN} max={NODE_MAX} />
+			<RangeSlider title="node" bind:value={nodeRange} min={NODE_MIN} max={NODE_MAX} />
 		{/if}
 		{#if mode.value === 'random'}
 			<RangeSlider
 				title="edge"
-				bind:value={edge}
-				min={minEdge(node[0], mode.value, connected)}
-				max={maxEdge(node[1], mode.value)}
+				bind:value={edgeRange}
+				min={minEdge(nodeRange[0], mode.value, connected)}
+				max={maxEdge(nodeRange[1], mode.value)}
 			/>
 		{:else if mode.value === 'bipartite'}
 			<RangeSlider
 				title="edge"
-				bind:value={edge}
-				min={connected ? node1[0] + node2[0] - 1 : 0}
-				max={node1[1] * node2[1]}
+				bind:value={edgeRange}
+				min={connected ? node1Range[0] + node2Range[0] - 1 : 0}
+				max={node1Range[1] * node2Range[1]}
 			/>
 		{/if}
 		{#if mode.value === 'random' || mode.value === 'bipartite'}
@@ -196,7 +215,7 @@
 			<Label for="weighted" class="text-md">weighted</Label>
 		</div>
 		{#if weighted}
-			<RangeSlider title="weight" bind:value={weight} min={WEIGHT_MIN} max={WEIGHT_MAX} />
+			<RangeSlider title="weight" bind:value={weightRange} min={WEIGHT_MIN} max={WEIGHT_MAX} />
 		{/if}
 		<Tabs.Root bind:value={offset} class="w-full">
 			<Tabs.List class="w-full">
@@ -207,19 +226,17 @@
 	</Card.Content>
 	<Card.Footer class="flex flex-col space-y-6 items-start">
 		<Button on:click={() => clickHandler()} class="w-full">Generate</Button>
-		{#if generated}
-			<div class="w-full" transition:slide>
-				<ScrollArea
-					orientation="vertical"
-					class="w-full h-[150px] bg-gray-100 p-5 rounded-md font-mono relative"
-				>
-					<CopyIcon onClick={copyToClipboard} />
-					<NoteIcon weighted={dataWeighted} bind:formatMode />
-					<p class="whitespace-pre-line pr-10">
-						{generatedText}
-					</p>
-				</ScrollArea>
-			</div>
-		{/if}
+		<div class="w-full" transition:slide>
+			<ScrollArea
+				orientation="vertical"
+				class="w-full h-[150px] bg-gray-100 p-5 rounded-md font-mono relative"
+			>
+				<CopyIcon onClick={copyToClipboard} />
+				<NoteIcon {weighted} bind:formatMode />
+				<p class="whitespace-pre-line pr-10">
+					{generatedText}
+				</p>
+			</ScrollArea>
+		</div>
 	</Card.Footer>
 </Card.Root>
