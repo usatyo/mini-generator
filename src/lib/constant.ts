@@ -39,6 +39,10 @@ export const WEIGHT_MIN = 0;
 export const WEIGHT_MAX = 99;
 export const MAX_URL_NODE = 16;
 
+export const commonUrl = 'https://mini-generator.netlify.app/graph';
+export const orangeCode = '#ffa07a';
+export const blueCode = '#00ced1';
+
 export const defaultStyle: cytoscape.Stylesheet[] = [
 	{
 		selector: 'node',
@@ -46,7 +50,7 @@ export const defaultStyle: cytoscape.Stylesheet[] = [
 			content: 'data(id)',
 			'text-valign': 'center',
 			'text-halign': 'center',
-			'background-color': '#F7BD5B',
+			'background-color': orangeCode,
 			'font-size': '10px'
 		}
 	},
@@ -63,5 +67,3 @@ export const defaultStyle: cytoscape.Stylesheet[] = [
 		}
 	}
 ];
-
-export const commonUrl = 'https://mini-generator.netlify.app/graph';
