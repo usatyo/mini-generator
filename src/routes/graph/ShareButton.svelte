@@ -5,8 +5,9 @@
 	import { fade } from 'svelte/transition';
 
 	export let disabled;
-	export let text = '';
 	export let url: string = '';
+
+	const text = "グラフを共有しよう%0a%0a"
 
 	$: href = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
 </script>

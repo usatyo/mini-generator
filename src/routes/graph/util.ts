@@ -1,4 +1,4 @@
-import type { FormatModeType, GenerateType, GraphInfo } from '$lib/constant';
+import { blueCode, orangeCode, type FormatModeType, type GenerateType, type GraphInfo } from '$lib/constant';
 import { UnionFind } from '$lib/unionfind';
 
 export const generate = (props: GraphInfo, edges?: number[][]): number[][] => {
@@ -75,9 +75,9 @@ export const generate = (props: GraphInfo, edges?: number[][]): number[][] => {
 		for (let i = 0; i < props.node; i++) {
 			if (i < props.part) {
 				roots.push((nodeOrder[i] + props.offset).toString());
-				props.cy.$id((nodeOrder[i] + props.offset).toString()).style('background-color', '#F7BD5B'); // orange
+				props.cy.$id((nodeOrder[i] + props.offset).toString()).style('background-color', orangeCode);
 			} else {
-				props.cy.$id((nodeOrder[i] + props.offset).toString()).style('background-color', '#80B1EB'); // blue
+				props.cy.$id((nodeOrder[i] + props.offset).toString()).style('background-color', blueCode);
 			}
 		}
 		// props.cy.layout({ name: 'breadthfirst', roots, directed: true, animate: false }).run();

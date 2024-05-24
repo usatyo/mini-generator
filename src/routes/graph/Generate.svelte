@@ -131,6 +131,7 @@
 		if (cy && !generated) {
 			const { info: initGraphInfo, edges: initEdges } = initializeGraph($page.url.searchParams, cy);
 			initializeGraphParameter(initGraphInfo, initEdges);
+			generatedUrl = urlWithParameter(initGraphInfo, fixEdges);
 			generated = true;
 		}
 	}
