@@ -6,7 +6,7 @@ export class UnionFind {
 		for (let i = 0; i < n; i++) this.parents[i] = -1;
 	}
 
-	public root(a: number): number {
+	private root(a: number): number {
 		if (this.parents[a] < 0) {
 			return a;
 		}

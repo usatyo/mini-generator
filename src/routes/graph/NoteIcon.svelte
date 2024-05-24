@@ -3,7 +3,7 @@
 	import { type CarouselAPI } from '$lib/components/ui/carousel/context';
 	import * as Carousel from '$lib/components/ui/carousel/index.js';
 	import * as Popover from '$lib/components/ui/popover';
-	import type { FormatModeType } from './util';
+	import type { FormatModeType } from '$lib/constant';
 
 	export let weighted: boolean = false;
 	export let formatMode: FormatModeType = 'column';
