@@ -29,11 +29,10 @@
 
 <div class="h-full justify-evenly py-[10vh] lg:flex lg:flex-row">
 	<Card.Root class="relative">
-		<div id="cy" class="h-[40vh] lg:h-full lg:w-[50vw]">
-			{#if generated}
-				<ShareButton url={generatedUrl} disabled={disabledShareButton} />
-			{/if}
-		</div>
+		<div id="cy" class="h-[40vh] lg:h-full lg:w-[50vw]" />
+		{#if generated}
+			<ShareButton url={generatedUrl} disabled={disabledShareButton} />
+		{/if}
 	</Card.Root>
 	<div class="lg:w-[30vw] flex flex-col lg:max-h-full overflow-y-scroll py-3 lg:py-0">
 		<Tabs.Root value="generate">
