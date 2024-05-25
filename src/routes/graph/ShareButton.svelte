@@ -7,7 +7,7 @@
 	export let disabled;
 	export let url: string = '';
 
-	const text = "グラフを共有しよう%0a%0a"
+	const text = '%0a%0a';
 
 	$: href = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
 </script>
