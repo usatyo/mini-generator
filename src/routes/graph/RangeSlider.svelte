@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Input } from '$lib/components/ui/input';
 	import { Slider } from '$lib/components/ui/slider';
 	import { slide } from 'svelte/transition';
 
@@ -43,11 +42,15 @@
 		</div>
 	</div>
 	<div class="w-20">
-		<label for={label1} class="text-md">min</label>
-		<Input type="number" name={label1} bind:value={value[0]} {min} {max} class="mt-1 font-mono" />
+		<p class="text-md">min</p>
+		<p class="mt-1 h-10 leading-10 text-center font-mono">{value[0]}</p>
+		<!-- <label for={label1} class="text-md">min</label> -->
+		<!-- <Input type="number" name={label1} bind:value={value[0]} {min} max={value[1]} class="mt-1 font-mono" /> -->
 	</div>
 	<div class="w-20">
-		<label for={label2} class="text-md">max</label>
-		<Input type="number" name={label2} bind:value={value[1]} {min} {max} class="mt-1 font-mono" />
+		<p class="text-md">max</p>
+		<p class="mt-1 h-10 leading-10 text-center font-mono">{value[1]}</p>
+		<!-- <label for={label2} class="text-md">max</label> -->
+		<!-- <Input type="number" name={label2} bind:value={value[1]} min={value[0]} {max} class="mt-1 font-mono" /> -->
 	</div>
 </div>
