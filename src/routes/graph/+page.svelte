@@ -27,7 +27,7 @@
 
 <Head />
 
-<div class="h-full justify-evenly py-[10vh] lg:flex lg:flex-row">
+<div class="h-full py-[10vh] lg:flex lg:flex-row lg:justify-evenly">
 	<Card.Root class="relative">
 		<div id="cy" class="h-[40vh] lg:h-full lg:w-[50vw]" />
 		{#if generated}
@@ -43,7 +43,7 @@
 			<Tabs.Content value="generate">
 				<Generate {cy} bind:generatedUrl bind:disabledShareButton bind:generated />
 			</Tabs.Content>
-			<Tabs.Content value="visualize"><Visualize /></Tabs.Content>
+			<Tabs.Content value="visualize"><Visualize {cy} /></Tabs.Content>
 		</Tabs.Root>
 	</div>
 </div>
