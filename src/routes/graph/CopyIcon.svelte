@@ -15,7 +15,7 @@
 	};
 </script>
 
-<div class="absolute top-3 right-3 h-10 w-10">
+<div class="absolute right-3 top-3 h-10 w-10">
 	<Popover.Root open={copied && false}>
 		<Popover.Trigger>
 			<Button variant="ghost" on:click={clickHandler} class="p-2">
@@ -29,7 +29,7 @@
 					stroke-width="2"
 					stroke-linecap="round"
 					stroke-linejoin="round"
-					class="lucide lucide-copy hover:opacity-50 h-full w-full"
+					class="lucide lucide-copy h-full w-full hover:opacity-50"
 				>
 					<rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path
 						d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"

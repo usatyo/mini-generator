@@ -225,12 +225,12 @@
 			</Tabs.List>
 		</Tabs.Root>
 	</Card.Content>
-	<Card.Footer class="flex flex-col space-y-6 items-start">
+	<Card.Footer class="flex flex-col items-start space-y-6">
 		<Button on:click={() => clickHandler()} class="w-full">Generate</Button>
 		<div class="w-full" transition:slide>
 			<ScrollArea
 				orientation="vertical"
-				class="w-full h-[150px] bg-gray-100 p-5 rounded-md font-mono relative"
+				class="relative h-[150px] w-full rounded-md bg-gray-100 p-5 font-mono"
 			>
 				<CopyIcon onClick={copyToClipboard} />
 				<NoteIcon {weighted} bind:formatMode />

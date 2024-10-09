@@ -34,9 +34,9 @@
 			<ShareButton url={generatedUrl} disabled={disabledShareButton} />
 		{/if}
 	</Card.Root>
-	<div class="lg:w-[30vw] flex flex-col lg:max-h-full overflow-y-scroll py-3 lg:py-0">
+	<div class="flex flex-col overflow-y-scroll py-3 lg:max-h-full lg:w-[30vw] lg:py-0">
 		<Tabs.Root value="generate">
-			<Tabs.List class="w-full flex">
+			<Tabs.List class="flex w-full">
 				<Tabs.Trigger value="generate" class="grow">Generate</Tabs.Trigger>
 				<Tabs.Trigger value="visualize" class="grow">Visualize</Tabs.Trigger>
 			</Tabs.List>

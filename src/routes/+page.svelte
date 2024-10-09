@@ -6,7 +6,7 @@
 <ul class="px-10 py-5">
 	{#each links as link}
 		<li>
-			<a href={link.href} class="text-xl font-mono">- {link.name}</a>
+			<a href={link.href} class="font-mono text-xl">- {link.name}</a>
 		</li>
 	{/each}
 </ul>

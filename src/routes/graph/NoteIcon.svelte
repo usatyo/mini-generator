@@ -46,7 +46,7 @@
 	];
 </script>
 
-<div class="absolute top-16 right-3 h-10 w-10">
+<div class="absolute right-3 top-16 h-10 w-10">
 	<Popover.Root>
 		<Popover.Trigger>
 			<Button variant="ghost" class="p-2">
@@ -60,7 +60,7 @@
 					stroke-width="2"
 					stroke-linecap="round"
 					stroke-linejoin="round"
-					class="lucide lucide-circle-help hover:opacity-50 h-full w-full"
+					class="lucide lucide-circle-help h-full w-full hover:opacity-50"
 				>
 					<circle cx="12" cy="12" r="10" />
 					<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
@@ -75,7 +75,7 @@
 					{#if weighted}
 						{#each weightedlegendText as { text }}
 							<Carousel.Item>
-								<p class="font-mono whitespace-pre-line bg-gray-100 p-3 mx-10 rounded-md h-full">
+								<p class="mx-10 h-full whitespace-pre-line rounded-md bg-gray-100 p-3 font-mono">
 									{text}
 								</p>
 							</Carousel.Item>
@@ -83,7 +83,7 @@
 					{:else}
 						{#each unweightedlegendText as { text }}
 							<Carousel.Item>
-								<p class="font-mono whitespace-pre-line bg-gray-100 p-3 mx-10 rounded-md h-full">
+								<p class="mx-10 h-full whitespace-pre-line rounded-md bg-gray-100 p-3 font-mono">
 									{text}
 								</p>
 							</Carousel.Item>
