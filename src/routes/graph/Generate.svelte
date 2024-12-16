@@ -24,7 +24,7 @@
 	import CopyIcon from './CopyIcon.svelte';
 	import NoteIcon from './NoteIcon.svelte';
 	import RangeSlider from './RangeSlider.svelte';
-	import { formatEdge, generate, maxEdge, minEdge, randInt } from './util';
+	import { formatEdge, generate, maxEdge, minEdge, randInt } from './generate';
 
 	export let cy: cytoscape.Core | null = null;
 	export let generatedUrl = '';
