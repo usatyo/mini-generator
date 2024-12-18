@@ -23,7 +23,7 @@
 		</Tooltip.Trigger>
 		<Tooltip.Content>
 			{#if disabled}
-				<span>Max 16 nodes</span>
+				<span>Max 16 nodes to share</span>
 			{:else}
 				<span>Share on X</span>
 			{/if}

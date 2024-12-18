@@ -51,8 +51,8 @@
 		</Tabs.Root>
 		<Tabs.Root bind:value={mode} class="w-full">
 			<Tabs.List class="grid w-full grid-cols-2">
-				<Tabs.Trigger value="row" on:click={update}>Row</Tabs.Trigger>
-				<Tabs.Trigger value="column" on:click={update}>Column</Tabs.Trigger>
+				<Tabs.Trigger value="row" on:click={update}>Row Style</Tabs.Trigger>
+				<Tabs.Trigger value="column" on:click={update}>Column Style</Tabs.Trigger>
 			</Tabs.List>
 		</Tabs.Root>
 		<div>

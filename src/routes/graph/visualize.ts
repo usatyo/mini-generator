@@ -33,7 +33,7 @@ export const updateGraph = (
 	}
 };
 
-const readRowGraph = (rawLines: Array<string>, offset: number): GraphData => {
+const readColumnGraph = (rawLines: Array<string>, offset: number): GraphData => {
 	const firstLine = convert(rawLines[0]);
 	if (firstLine.length != 2) {
 		throw new Error('First line must be "n m"');
@@ -59,7 +59,7 @@ const readRowGraph = (rawLines: Array<string>, offset: number): GraphData => {
 	return { node, edge, edgeDatas };
 };
 
-const readColumnGraph = (rawLines: Array<string>, offset: number): GraphData => {
+const readRowGraph = (rawLines: Array<string>, offset: number): GraphData => {
 	const firstLine = convert(rawLines[0]);
 	if (firstLine.length != 2) {
 		throw new Error('First line must be "n m"');
