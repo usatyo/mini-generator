@@ -3,10 +3,19 @@
 	import { type CarouselAPI } from '$lib/components/ui/carousel/context';
 	import * as Carousel from '$lib/components/ui/carousel/index.js';
 	import * as Popover from '$lib/components/ui/popover';
-	import type { FormatModeType } from '$lib/constant';
+	import {
+		UNWEIGHTED_COLUMN_TEXT,
+		UNWEIGHTED_ROW_TEXT,
+		WEIGHTED_COLUMN_TEXT,
+		WEIGHTED_HALF_ROW_TEXT,
+		WEIGHTED_ROW_TEXT,
+		type FormatModeType
+	} from '$lib/constant';
+	import { cn } from '$lib/utils';
 
 	export let weighted: boolean = false;
 	export let formatMode: FormatModeType = 'column';
+	export let className: string = '';
 
 	let api: CarouselAPI;
 
@@ -22,31 +31,31 @@
 
 	const weightedlegendText: { text: string; val: FormatModeType }[] = [
 		{
-			text: 'n m\nu1 v1 w1\nu2 v2 w2\nu3 v3 w3\n...',
+			text: WEIGHTED_COLUMN_TEXT,
 			val: 'column'
 		},
 		{
-			text: 'n m\nw1 w2 ...\nu1 v1\nu2 v2\n...',
+			text: WEIGHTED_HALF_ROW_TEXT,
 			val: 'weight-row'
 		},
 		{
-			text: 'n m\nw1 w2 ...\nu1 u2 ...\nv1 v2 ...',
+			text: WEIGHTED_ROW_TEXT,
 			val: 'row'
 		}
 	];
 	const unweightedlegendText: { text: string; val: FormatModeType }[] = [
 		{
-			text: 'n m\nu1 v1\nu2 v2\nu3 v3\n...',
+			text: UNWEIGHTED_COLUMN_TEXT,
 			val: 'column'
 		},
 		{
-			text: 'n m\nu1 u2 ...\nv1 v2 ...',
+			text: UNWEIGHTED_ROW_TEXT,
 			val: 'row'
 		}
 	];
 </script>
 
-<div class="absolute right-3 top-16 h-10 w-10">
+<div class={cn('h-10 w-10', className)}>
 	<Popover.Root>
 		<Popover.Trigger>
 			<Button variant="ghost" class="p-2">

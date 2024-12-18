@@ -5,8 +5,8 @@
 	import cytoscape from 'cytoscape';
 	import { onMount } from 'svelte';
 	import Generate from './Generate.svelte';
-	import Head from './Head.svelte';
-	import ShareButton from './ShareButton.svelte';
+	import Head from '$lib/components/Head.svelte';
+	import ShareButton from '$lib/components/ShareButton.svelte';
 	import Visualize from './Visualize.svelte';
 
 	let container: HTMLElement | null = null;

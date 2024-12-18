@@ -7,6 +7,7 @@
 	import type cytoscape from 'cytoscape';
 	import { slide } from 'svelte/transition';
 	import { twMerge } from 'tailwind-merge';
+	import NoteIcon from '$lib/components/NoteIcon.svelte';
 	import { updateGraph, type Mode } from './visualize';
 
 	export let cy: cytoscape.Core | null = null;
@@ -50,9 +51,13 @@
 			</Tabs.List>
 		</Tabs.Root>
 		<Tabs.Root bind:value={mode} class="w-full">
-			<Tabs.List class="grid w-full grid-cols-2">
-				<Tabs.Trigger value="row" on:click={update}>Row Style</Tabs.Trigger>
-				<Tabs.Trigger value="column" on:click={update}>Column Style</Tabs.Trigger>
+			<Tabs.List class="grid w-full grid-cols-2 h-fit">
+				<Tabs.Trigger value="row" on:click={update} class="relative"
+					>Row Style<NoteIcon formatMode="row" /></Tabs.Trigger
+				>
+				<Tabs.Trigger value="column" on:click={update} class="relative"
+					>Column Style<NoteIcon formatMode="column" />
+				</Tabs.Trigger>
 			</Tabs.List>
 		</Tabs.Root>
 		<div>

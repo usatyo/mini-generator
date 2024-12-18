@@ -21,9 +21,9 @@
 	} from '$lib/constant';
 	import { initializeGraph, urlWithParameter } from '$lib/urlParameter';
 	import { slide } from 'svelte/transition';
-	import CopyIcon from './CopyIcon.svelte';
-	import NoteIcon from './NoteIcon.svelte';
-	import RangeSlider from './RangeSlider.svelte';
+	import CopyIcon from '$lib/components/CopyIcon.svelte';
+	import NoteIcon from '$lib/components/NoteIcon.svelte';
+	import RangeSlider from '$lib/components/RangeSlider.svelte';
 	import { formatEdge, generate, maxEdge, minEdge, randInt } from './generate';
 
 	export let cy: cytoscape.Core | null = null;
@@ -233,7 +233,7 @@
 				class="relative h-[150px] w-full rounded-md bg-gray-100 p-5 font-mono"
 			>
 				<CopyIcon onClick={copyToClipboard} />
-				<NoteIcon {weighted} bind:formatMode />
+				<NoteIcon {weighted} bind:formatMode className="absolute top-16 right-3" />
 				<p class="whitespace-pre-line pr-10">
 					{generatedText}
 				</p>
