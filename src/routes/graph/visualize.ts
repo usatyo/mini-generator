@@ -1,3 +1,4 @@
+import type { Mode } from '$lib/constant';
 import type cytoscape from 'cytoscape';
 
 type GraphData = {
@@ -6,7 +7,6 @@ type GraphData = {
 	edgeDatas: Array<Array<number>>;
 };
 
-export type Mode = 'row' | 'column';
 
 export const updateGraph = (
 	cy: cytoscape.Core | null,

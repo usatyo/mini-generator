@@ -1,14 +1,15 @@
 <script lang="ts">
+	import Annotation from '$lib/components/Annotation.svelte';
 	import * as Card from '$lib/components/ui/card';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Label } from '$lib/components/ui/label';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { Textarea } from '$lib/components/ui/textarea';
+	import type { Mode } from '$lib/constant';
 	import type cytoscape from 'cytoscape';
 	import { slide } from 'svelte/transition';
 	import { twMerge } from 'tailwind-merge';
-	import NoteIcon from '$lib/components/NoteIcon.svelte';
-	import { updateGraph, type Mode } from './visualize';
+	import { updateGraph } from './visualize';
 
 	export let cy: cytoscape.Core | null = null;
 
@@ -51,12 +52,15 @@
 			</Tabs.List>
 		</Tabs.Root>
 		<Tabs.Root bind:value={mode} class="w-full">
-			<Tabs.List class="grid w-full grid-cols-2 h-fit">
-				<Tabs.Trigger value="row" on:click={update} class="relative"
-					>Row Style<NoteIcon formatMode="row" /></Tabs.Trigger
-				>
-				<Tabs.Trigger value="column" on:click={update} class="relative"
-					>Column Style<NoteIcon formatMode="column" />
+			<span class="text-md">data direction</span>
+			<Tabs.List class="mt-1 grid h-fit w-full grid-cols-2">
+				<Tabs.Trigger value="row" on:click={update} class="relative">
+					Row
+					<Annotation mode="row" />
+				</Tabs.Trigger>
+				<Tabs.Trigger value="column" on:click={update} class="relative">
+					Column
+					<Annotation mode="column" />
 				</Tabs.Trigger>
 			</Tabs.List>
 		</Tabs.Root>

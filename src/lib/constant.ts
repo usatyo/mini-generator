@@ -19,6 +19,7 @@ export const modeLabels = [
 	'Path(パスグラフ)'
 ] as const;
 export type FormatModeType = 'column' | 'row' | 'weight-row';
+export type Mode = 'row' | 'column';
 export type GenerateType = (typeof generateModes)[number];
 export type GraphInfo = {
 	mode: GenerateType;
