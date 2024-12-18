@@ -13,6 +13,7 @@
 
 	let directed = false;
 	let isValid = true;
+	let rawText = '';
 	let offset = '0';
 	let mode: Mode = 'row';
 	let message = '';
@@ -25,6 +26,11 @@
 		} else {
 			cy?.style().selector('edge').style({ 'target-arrow-shape': 'none' }).update();
 		}
+	};
+	const update = () => {
+		const { valid, errorMessage } = updateGraph(cy, rawText, Number(offset), mode);
+		isValid = valid;
+		message = errorMessage;
 	};
 </script>
 
@@ -39,14 +45,14 @@
 		</div>
 		<Tabs.Root bind:value={offset} class="w-full">
 			<Tabs.List class="grid w-full grid-cols-2">
-				<Tabs.Trigger value="0">0-based</Tabs.Trigger>
-				<Tabs.Trigger value="1">1-based</Tabs.Trigger>
+				<Tabs.Trigger value="0" on:click={update}>0-based</Tabs.Trigger>
+				<Tabs.Trigger value="1" on:click={update}>1-based</Tabs.Trigger>
 			</Tabs.List>
 		</Tabs.Root>
 		<Tabs.Root bind:value={mode} class="w-full">
 			<Tabs.List class="grid w-full grid-cols-2">
-				<Tabs.Trigger value="row">Row</Tabs.Trigger>
-				<Tabs.Trigger value="column">Column</Tabs.Trigger>
+				<Tabs.Trigger value="row" on:click={update}>Row</Tabs.Trigger>
+				<Tabs.Trigger value="column" on:click={update}>Column</Tabs.Trigger>
 			</Tabs.List>
 		</Tabs.Root>
 		<div>
@@ -55,14 +61,8 @@
 				id="user-graph"
 				class={twMerge('mt-1 h-96 font-mono text-lg', !isValid && 'border-red-500')}
 				on:input={(e) => {
-					const { valid, errorMessage } = updateGraph(
-						cy,
-						e.currentTarget.value,
-						Number(offset),
-						mode
-					);
-					isValid = valid;
-					message = errorMessage;
+					rawText = e.currentTarget.value;
+					update();
 				}}
 			></Textarea>
 			{#if !isValid}
