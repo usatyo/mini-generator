@@ -7,7 +7,6 @@
 	import { Textarea } from '$lib/components/ui/textarea';
 	import type { Mode } from '$lib/constant';
 	import type cytoscape from 'cytoscape';
-	import { slide } from 'svelte/transition';
 	import { twMerge } from 'tailwind-merge';
 	import { updateGraph } from './visualize';
 
@@ -21,6 +20,11 @@
 	let message = '';
 
 	$: updateDirected(directed);
+	$: {
+		const { valid, errorMessage } = updateGraph(cy, rawText, Number(offset), mode);
+		isValid = valid;
+		message = errorMessage;
+	}
 
 	const updateDirected = (val: boolean) => {
 		if (val) {
@@ -29,11 +33,6 @@
 			cy?.style().selector('edge').style({ 'target-arrow-shape': 'none' }).update();
 		}
 	};
-	const update = () => {
-		const { valid, errorMessage } = updateGraph(cy, rawText, Number(offset), mode);
-		isValid = valid;
-		message = errorMessage;
-	};
 </script>
 
 <Card.Root>
@@ -41,24 +40,24 @@
 		<Card.Title>Visualize graph</Card.Title>
 	</Card.Header>
 	<Card.Content class="flex flex-col space-y-5">
-		<div class="flex items-center space-x-2" transition:slide>
+		<div class="flex items-center space-x-2">
 			<Checkbox id="directed_visualize" bind:checked={directed} />
 			<Label for="directed_visualize" class="text-md">directed</Label>
 		</div>
 		<Tabs.Root bind:value={offset} class="w-full">
 			<Tabs.List class="grid w-full grid-cols-2">
-				<Tabs.Trigger value="0" on:click={update}>0-based</Tabs.Trigger>
-				<Tabs.Trigger value="1" on:click={update}>1-based</Tabs.Trigger>
+				<Tabs.Trigger value="0">0-based</Tabs.Trigger>
+				<Tabs.Trigger value="1">1-based</Tabs.Trigger>
 			</Tabs.List>
 		</Tabs.Root>
 		<Tabs.Root bind:value={mode} class="w-full">
 			<span class="text-md">data direction</span>
 			<Tabs.List class="mt-1 grid h-fit w-full grid-cols-2">
-				<Tabs.Trigger value="row" on:click={update} class="relative">
+				<Tabs.Trigger value="row" class="relative">
 					Row
 					<Annotation mode="row" />
 				</Tabs.Trigger>
-				<Tabs.Trigger value="column" on:click={update} class="relative">
+				<Tabs.Trigger value="column" class="relative">
 					Column
 					<Annotation mode="column" />
 				</Tabs.Trigger>
@@ -71,7 +70,6 @@
 				class={twMerge('mt-1 h-96 font-mono text-lg', !isValid && 'border-red-500')}
 				on:input={(e) => {
 					rawText = e.currentTarget.value;
-					update();
 				}}
 			></Textarea>
 			{#if !isValid}
