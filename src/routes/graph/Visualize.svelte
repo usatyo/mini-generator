@@ -7,13 +7,14 @@
 	import type cytoscape from 'cytoscape';
 	import { slide } from 'svelte/transition';
 	import { twMerge } from 'tailwind-merge';
-	import { readGraph } from './visualize';
+	import { updateGraph, type Mode } from './visualize';
 
 	export let cy: cytoscape.Core | null = null;
 
 	let directed = false;
 	let isValid = true;
 	let offset = '0';
+	let mode: Mode = 'row';
 	let message = '';
 
 	$: updateDirected(directed);
@@ -37,9 +38,15 @@
 			<Label for="directed_visualize" class="text-md">directed</Label>
 		</div>
 		<Tabs.Root bind:value={offset} class="w-full">
-			<Tabs.List class="w-full">
-				<Tabs.Trigger value="0" class="grow">0-based</Tabs.Trigger>
-				<Tabs.Trigger value="1" class="grow">1-based</Tabs.Trigger>
+			<Tabs.List class="grid w-full grid-cols-2">
+				<Tabs.Trigger value="0">0-based</Tabs.Trigger>
+				<Tabs.Trigger value="1">1-based</Tabs.Trigger>
+			</Tabs.List>
+		</Tabs.Root>
+		<Tabs.Root bind:value={mode} class="w-full">
+			<Tabs.List class="grid w-full grid-cols-2">
+				<Tabs.Trigger value="row">Row</Tabs.Trigger>
+				<Tabs.Trigger value="column">Column</Tabs.Trigger>
 			</Tabs.List>
 		</Tabs.Root>
 		<div>
@@ -48,7 +55,12 @@
 				id="user-graph"
 				class={twMerge('mt-1 h-96 font-mono text-lg', !isValid && 'border-red-500')}
 				on:input={(e) => {
-					const { valid, errorMessage } = readGraph(cy, e.currentTarget.value, Number(offset));
+					const { valid, errorMessage } = updateGraph(
+						cy,
+						e.currentTarget.value,
+						Number(offset),
+						mode
+					);
 					isValid = valid;
 					message = errorMessage;
 				}}
