@@ -1,4 +1,4 @@
-import { generate, randInt } from '../routes/graph/util';
+import { generate, randInt } from '../routes/graph/generate';
 import { commonUrl, MAX_URL_NODE, type GenerateType, type GraphInfo } from './constant';
 
 export const urlWithParameter = (props: GraphInfo, edges: number[][]): string => {

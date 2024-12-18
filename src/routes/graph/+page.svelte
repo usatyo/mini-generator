@@ -5,8 +5,8 @@
 	import cytoscape from 'cytoscape';
 	import { onMount } from 'svelte';
 	import Generate from './Generate.svelte';
-	import Head from './Head.svelte';
-	import ShareButton from './ShareButton.svelte';
+	import Head from '$lib/components/Head.svelte';
+	import ShareButton from '$lib/components/ShareButton.svelte';
 	import Visualize from './Visualize.svelte';
 
 	let container: HTMLElement | null = null;
@@ -27,23 +27,23 @@
 
 <Head />
 
-<div class="h-full justify-evenly py-[10vh] lg:flex lg:flex-row">
+<div class="h-full py-[10vh] lg:flex lg:flex-row lg:justify-evenly">
 	<Card.Root class="relative">
 		<div id="cy" class="h-[40vh] lg:h-full lg:w-[50vw]" />
 		{#if generated}
 			<ShareButton url={generatedUrl} disabled={disabledShareButton} />
 		{/if}
 	</Card.Root>
-	<div class="lg:w-[30vw] flex flex-col lg:max-h-full overflow-y-scroll py-3 lg:py-0">
+	<div class="flex flex-col overflow-y-scroll py-3 lg:max-h-full lg:w-[30vw] lg:py-0">
 		<Tabs.Root value="generate">
-			<Tabs.List class="w-full flex">
+			<Tabs.List class="flex w-full">
 				<Tabs.Trigger value="generate" class="grow">Generate</Tabs.Trigger>
 				<Tabs.Trigger value="visualize" class="grow">Visualize</Tabs.Trigger>
 			</Tabs.List>
 			<Tabs.Content value="generate">
 				<Generate {cy} bind:generatedUrl bind:disabledShareButton bind:generated />
 			</Tabs.Content>
-			<Tabs.Content value="visualize"><Visualize /></Tabs.Content>
+			<Tabs.Content value="visualize"><Visualize {cy} /></Tabs.Content>
 		</Tabs.Root>
 	</div>
 </div>

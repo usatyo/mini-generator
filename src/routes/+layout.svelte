@@ -2,11 +2,11 @@
 	import '../app.css';
 </script>
 
-<div class="flex-col h-[100vh] p-3 lg:p-0">
-	<header class="absolute py-6 px-6 md:px-12 opacity-50 w-[100vw]">
+<div class="h-[100vh] flex-col p-3 lg:p-0">
+	<header class="absolute w-[100vw] px-6 py-6 opacity-50 md:px-12">
 		<a href="/">
 			<p
-				class="inline-block text-3xl md:text-4xl font-black bg-gradient-to-br from-[#95a8b5] to-[#3d484e] text-transparent bg-clip-text"
+				class="inline-block bg-gradient-to-br from-[#95a8b5] to-[#3d484e] bg-clip-text text-3xl font-black text-transparent md:text-4xl"
 			>
 				MINI GENERATOR
 			</p>

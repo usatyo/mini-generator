@@ -19,6 +19,7 @@ export const modeLabels = [
 	'Path(パスグラフ)'
 ] as const;
 export type FormatModeType = 'column' | 'row' | 'weight-row';
+export type Mode = 'row' | 'column';
 export type GenerateType = (typeof generateModes)[number];
 export type GraphInfo = {
 	mode: GenerateType;
@@ -38,6 +39,12 @@ export const NODE_MAX = 50;
 export const WEIGHT_MIN = 0;
 export const WEIGHT_MAX = 99;
 export const MAX_URL_NODE = 16;
+
+export const WEIGHTED_COLUMN_TEXT = 'n m\nu1 v1 w1\nu2 v2 w2\nu3 v3 w3\n...';
+export const WEIGHTED_HALF_ROW_TEXT = 'n m\nw1 w2 ...\nu1 v1\nu2 v2\n...';
+export const WEIGHTED_ROW_TEXT = 'n m\nw1 w2 ...\nu1 u2 ...\nv1 v2 ...';
+export const UNWEIGHTED_COLUMN_TEXT = 'n m\nu1 v1\nu2 v2\nu3 v3\n...';
+export const UNWEIGHTED_ROW_TEXT = 'n m\nu1 u2 ...\nv1 v2 ...';
 
 export const commonUrl = 'https://mini-generator.netlify.app/graph';
 export const orangeCode = '#ffa07a';

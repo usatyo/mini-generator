@@ -30,7 +30,7 @@
 <div class="flex space-x-2" transition:slide>
 	<div class="grow">
 		<span class="text-md">{title}</span>
-		<div class="h-10 flex justify-center px-4 mt-1">
+		<div class="mt-1 flex h-10 justify-center px-4">
 			<Slider
 				onValueChange={(v) => {
 					changeHandler(v);
@@ -43,13 +43,13 @@
 	</div>
 	<div class="w-20">
 		<p class="text-md">min</p>
-		<p class="mt-1 h-10 leading-10 text-center font-mono">{value[0]}</p>
+		<p class="mt-1 h-10 text-center font-mono leading-10">{value[0]}</p>
 		<!-- <label for={label1} class="text-md">min</label> -->
 		<!-- <Input type="number" name={label1} bind:value={value[0]} {min} max={value[1]} class="mt-1 font-mono" /> -->
 	</div>
 	<div class="w-20">
 		<p class="text-md">max</p>
-		<p class="mt-1 h-10 leading-10 text-center font-mono">{value[1]}</p>
+		<p class="mt-1 h-10 text-center font-mono leading-10">{value[1]}</p>
 		<!-- <label for={label2} class="text-md">max</label> -->
 		<!-- <Input type="number" name={label2} bind:value={value[1]} min={value[0]} {max} class="mt-1 font-mono" /> -->
 	</div>

@@ -21,10 +21,10 @@
 	} from '$lib/constant';
 	import { initializeGraph, urlWithParameter } from '$lib/urlParameter';
 	import { slide } from 'svelte/transition';
-	import CopyIcon from './CopyIcon.svelte';
-	import NoteIcon from './NoteIcon.svelte';
-	import RangeSlider from './RangeSlider.svelte';
-	import { formatEdge, generate, maxEdge, minEdge, randInt } from './util';
+	import CopyIcon from '$lib/components/CopyIcon.svelte';
+	import NoteIcon from '$lib/components/NoteIcon.svelte';
+	import RangeSlider from '$lib/components/RangeSlider.svelte';
+	import { formatEdge, generate, maxEdge, minEdge, randInt } from './generate';
 
 	export let cy: cytoscape.Core | null = null;
 	export let generatedUrl = '';
@@ -225,15 +225,15 @@
 			</Tabs.List>
 		</Tabs.Root>
 	</Card.Content>
-	<Card.Footer class="flex flex-col space-y-6 items-start">
+	<Card.Footer class="flex flex-col items-start space-y-6">
 		<Button on:click={() => clickHandler()} class="w-full">Generate</Button>
 		<div class="w-full" transition:slide>
 			<ScrollArea
 				orientation="vertical"
-				class="w-full h-[150px] bg-gray-100 p-5 rounded-md font-mono relative"
+				class="relative h-[150px] w-full rounded-md bg-gray-100 p-5 font-mono"
 			>
 				<CopyIcon onClick={copyToClipboard} />
-				<NoteIcon {weighted} bind:formatMode />
+				<NoteIcon {weighted} bind:formatMode className="absolute top-16 right-3" />
 				<p class="whitespace-pre-line pr-10">
 					{generatedText}
 				</p>

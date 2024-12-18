@@ -42,7 +42,11 @@
 		"cytoscape-dagre": "^2.5.0",
 		"embla-carousel-svelte": "^8.1.0",
 		"lucide-svelte": "^0.378.0",
+		"prettier-plugin-tailwindcss": "^0.6.8",
 		"tailwind-merge": "^2.3.0",
 		"tailwind-variants": "^0.2.1"
+	},
+	"optionalDependencies": {
+		"@rollup/rollup-linux-x64-gnu": "4.6.1"
 	}
 }
