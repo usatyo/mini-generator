@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import CopyIcon from '$lib/components/CopyIcon.svelte';
+	import NoteIcon from '$lib/components/NoteIcon.svelte';
+	import RangeSlider from '$lib/components/RangeSlider.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import { Checkbox } from '$lib/components/ui/checkbox';
@@ -21,9 +24,6 @@
 	} from '$lib/constant';
 	import { initializeGraph, urlWithParameter } from '$lib/urlParameter';
 	import { slide } from 'svelte/transition';
-	import CopyIcon from '$lib/components/CopyIcon.svelte';
-	import NoteIcon from '$lib/components/NoteIcon.svelte';
-	import RangeSlider from '$lib/components/RangeSlider.svelte';
 	import { formatEdge, generate, maxEdge, minEdge, randInt } from './generate';
 
 	export let cy: cytoscape.Core | null = null;
@@ -100,8 +100,10 @@
 			fixEdge = fixNode - 1;
 		} else if (mode.value === 'complete') {
 			fixEdge = (fixNode * (fixNode - 1)) / 2;
-		} else if (mode.value === 'star') {
+		} else if (mode.value === 'star' || mode.value === 'path') {
 			fixEdge = fixNode - 1;
+		} else if (mode.value === 'cycle') {
+			fixEdge = fixNode;
 		}
 
 		const weight = Array(fixEdge)
